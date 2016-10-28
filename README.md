@@ -1,2 +1,2 @@
-# sgenome
-Scala API and command line utilities for genomics
+# sgxtools
+Command line tools for genomics written in Scala
