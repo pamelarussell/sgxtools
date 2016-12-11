@@ -4,7 +4,7 @@ version := "1.0"
 
 scalaVersion := "2.11.8"
 
-unmanagedJars in Compile += file("lib/sgxlib-assembly-1.0.jar")
+unmanagedJars in Compile += file("lib/sgxlib-1.0.jar")
 
 mainClass in (Compile,run) := Some("commandline.CommandLineEngine")
 
