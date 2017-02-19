@@ -2,19 +2,18 @@ package commandline
 
 import java.io.File
 
+import buildinfo.BuildInfo
 import feature.Orientation
 import org.rogach.scallop.{ScallopConf, ScallopOption, Subcommand}
 
 trait CommandLineProgram {
-  /**
-    * Name of tool to be passed as subcommand on command line
-    */
+
+  /** Name of tool to be passed as subcommand on command line */
   val toolName: String
 
-  /**
-    * One line tool description
-    */
+  /** One line tool description */
   val descr: String
+
 }
 
 /**
@@ -35,18 +34,17 @@ object CommandLineEngine extends App {
       val out: ScallopOption[String] = opt[String](required = true, descr = "Output table")
     }
 
-
     // Add the subcommands to the configuration
     addSubcommand(featureCounts)
 
     // Text for help menu
-    version("\nsgxtools 1.0\n")
+    version(s"\n${BuildInfo.name} ${BuildInfo.version}\n")
     banner(
-      """Usage: java -jar sgxtools-1.0.jar [subcommand] [options]
+      s"""Usage: java -jar ${BuildInfo.name}-${BuildInfo.version}.jar [subcommand] [options]
         |
         |Options:
       """.stripMargin)
-    footer("\nDocumentation: https://github.com/pamelarussell/sgxtools\n")
+    footer(s"\nDocumentation: https://github.com/pamelarussell/${BuildInfo.name}\n")
 
 
     // Verify the configuration
@@ -61,15 +59,18 @@ object CommandLineEngine extends App {
 
     // Match the subcommand
     conf.subcommand match {
+
       case Some(conf.featureCounts) =>
         val bam = new File(conf.featureCounts.bam.getOrElse(throw new IllegalArgumentException("Invalid option")))
         val gtf = new File(conf.featureCounts.gtf.getOrElse(throw new IllegalArgumentException("Invalid option")))
         val fpstrand = Orientation.fromString(conf.featureCounts.fpstrand.getOrElse(throw new IllegalArgumentException("Invalid option")))
         val out = new File(conf.featureCounts.out.getOrElse(throw new IllegalArgumentException("Invalid option")))
         FeatureCounts(bam, gtf, fpstrand, out)
+
       case _ =>
         conf.printHelp()
         sys.exit(0)
+
     }
   }
 

@@ -1,11 +1,12 @@
-/* This is Java code */
-
 package examples;
 
 import feature.*;
 import java.util.Arrays;
 import scala.collection.JavaConverters;
 
+/**
+ * Example of using sgxlib classes from Java code
+ */
 public class HelloSgx {
 
     public static void main(String[] args) {
