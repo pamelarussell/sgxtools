@@ -1,5 +1,6 @@
 val nm = "sgxtools"
-val ver = "1.0"
+val ver = "1.0.0"
+
 
 // Basic info
 name := nm
@@ -14,11 +15,18 @@ mainClass in (Compile,run) := Some("commandline.CommandLineEngine")
 mainClass in assembly := Some("commandline.CommandLineEngine")
 
 // Dependencies
-unmanagedJars in Compile += file("lib/sgxlib-1.0.jar")
+unmanagedJars in Compile += file("lib/sgxlib-1.0.0.jar")
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"
 libraryDependencies += "org.rogach" %% "scallop" % "2.1.0"
 
 // Testing
 testOptions in Test += Tests.Argument("-oF")
 
+// Make build info accessible programmatically from object buildinfo.BuildInfo
+lazy val root = (project in file(".")).
+  enablePlugins(BuildInfoPlugin).
+  settings(
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion),
+    buildInfoPackage := "buildinfo"
+  )
 
