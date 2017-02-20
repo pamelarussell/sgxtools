@@ -29,7 +29,7 @@ object CommandLineEngine extends App {
       descr(FeatureCounts.descr)
       val bam: ScallopOption[String] = opt[String](required = true, descr = "Bam file")
       val gtf: ScallopOption[String] = opt[String](required = true, descr = "GTF2.2 file")
-      val fpstrand: ScallopOption[String] = opt[String](required = true, descr = s"First of pair orientation" +
+      val fpstrand: ScallopOption[String] = opt[String](required = true, descr = s"First of pair orientation " +
         s"with respect to transcript (${Orientation.commaSepList})")
       val out: ScallopOption[String] = opt[String](required = true, descr = "Output table")
     }

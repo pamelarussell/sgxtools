@@ -15,7 +15,7 @@ The easiest way to use sgxtools is to use the precompiled .jar file. Go to [late
 
 ## Building from source
 
-To build a .jar file from source, [sbt](http://www.scala-sbt.org/) is required.
+To build a monolithic .jar file including all dependencies, [sbt](http://www.scala-sbt.org/) is required.
 
 ```
 sbt assembly
