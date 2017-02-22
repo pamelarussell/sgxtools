@@ -9,9 +9,9 @@ sgxtools provides command line genomics applications using [sgxlib](https://gith
 
 - Java 8
 
-## Download precompiled .jar file and source code
+## Download
 
-The easiest way to use sgxtools is to use the precompiled .jar file. Go to [latest release](https://github.com/pamelarussell/sgxtools/releases/latest) for precompiled .jar file and source code downloads.
+Go to [latest release](https://github.com/pamelarussell/sgxtools/releases/latest) for source code downloads.
 
 ## Building from source
 
