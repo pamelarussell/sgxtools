@@ -14,7 +14,12 @@ object NearestFeature extends CommandLineProgram {
     "the nearest feature(s) to each position"
 }
 
-
+/** Finds the nearest features to a list of positions in a GTF2.2 file and writes the results to a table.
+  *
+  * @param posList File of genomic positions (line format: [id] [chr] [pos])
+  * @param gtf22 GTF2.2 file of features
+  * @param output Output table to write
+  */
 final case class NearestFeature(posList: File, gtf22: File, output: File) {
 
   println("\nNearestFeature...\n")
