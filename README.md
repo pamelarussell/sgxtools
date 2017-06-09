@@ -73,6 +73,32 @@ Explanation:
 - GTF2.2 file: file of features in [GTF2.2](http://mblab.wustl.edu/GTF22.html) format.
 - Output table: file to write output to
 
+### NearestFeature
+
+`NearestFeature` identifies the nearest feature(s) in a GTF2.2 file to each of a list of genomic positions.
+
+The distance between a genomic position and a feature is defined as zero if the position overlaps the span of the feature (including introns), or the positive distance to the closest position in the feature otherwise. If multiple features lie at the same distance, all features tied for the minimum distance are reported.
+
+The program writes a table with one line per position, reporting the list of nearest features to each position as well as their distances from the position.
+
+To run:
+```
+java -jar sgxtools-[version].jar NearestFeature --help
+```
+
+Options:
+```
+  -g, --gtf  <arg>        GTF2.2 file
+  -o, --out  <arg>        Output table
+  -p, --pos-list  <arg>   Position file (line format: <id> <chr> <pos>
+      --help              Show help message
+```
+
+Explanation:
+- GTF2.2 file: file of features in [GTF2.2](http://mblab.wustl.edu/GTF22.html) format.
+- Position file: file of genomic positions. Each line has format: \<id> \<chr> \<pos>
+- Output table: file to write output to
+
 
 
 
