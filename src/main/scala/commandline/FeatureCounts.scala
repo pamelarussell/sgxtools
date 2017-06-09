@@ -32,13 +32,22 @@ object FeatureCounts extends CommandLineProgram {
   * @param output Output table to write
   */
 final case class FeatureCounts(bam: File, gtf22: File, firstOfPairStrandOnTranscript: Orientation, output: File) {
+
+  println("\nFeatureCounts...\n")
+
+  println(s"Reading features from ${gtf22.getAbsolutePath}")
   val fs = new GTF22FeatureSet(gtf22)
+  println(s"Reading alignments from ${bam.getAbsolutePath}")
   val sr = new SamReader(bam)
   val it: Iterator[Feature] = fs.iterator
+  println(s"Writing output to ${output.getAbsolutePath}")
   val bw = new BufferedWriter(new FileWriter(output))
   bw.write("feature_name\tcompatible_fragments\n")
   it.foreach(feat =>
       bw.write(s"${feat.name.getOrElse("*")}\t${sr.countCompatibleFragments(feat, firstOfPairStrandOnTranscript)}\n")
     )
   bw.close()
+
+  println("\nAll done.\n")
+
 }
