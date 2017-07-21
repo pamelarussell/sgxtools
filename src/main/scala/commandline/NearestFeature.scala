@@ -3,7 +3,7 @@ package commandline
 import java.io._
 
 import collection.GTF22FeatureSet
-import feature.{Block, GenericFeature, Unstranded}
+import feature.{Block, GenericFeature, Transcript, Unstranded, Feature}
 
 /**
   * [[NearestFeature]] program parameters
@@ -30,7 +30,7 @@ final case class NearestFeature(posList: File, gtf22: File, output: File) {
   println(s"Writing nearest features to ${output.getAbsolutePath}")
   val reader = new BufferedReader(new FileReader(posList))
   val writer = new FileWriter(output)
-  writer.write("id\tchr\tpos\tnearest_features\tdistances\n")
+  writer.write("id\tchr\tpos\tnearest_features\tnearest_genes\tdistance_to_features\n")
 
   while(reader.ready()) {
     val line = reader.readLine()
@@ -40,11 +40,20 @@ final case class NearestFeature(posList: File, gtf22: File, output: File) {
     val chr = tokens(1).replaceAll("^chr", "")
     val pos = tokens(2).toInt
     val nearest = features.nearest(chr, pos, pos+1).toList
-    val names = nearest.map(_.name.get).mkString(",")
-    val distances = nearest
-      .map(_.distance(new GenericFeature(Block(chr, pos, pos+1, Unstranded), None)))
-      .mkString(",")
-    writer.write(s"$id\t$chr\t$pos\t$names\t$distances\n")
+    val featNames = nearest.map(_.name.get).mkString(",")
+    val genes: Set[String] = nearest.map {
+      case t: Transcript => t.geneId
+      case _ => None
+    }
+      .filter(g => g.isDefined)
+      .map(g => g.get).toSet
+    val geneNames: String = if(genes.isEmpty) "NA" else genes.mkString(",")
+    val distances = nearest.map(_.distance(new GenericFeature(Block(chr, pos, pos+1, Unstranded), None)))
+    val distance: Int = distances.foldLeft[Int](distances.head)((a, b) => {
+      if(a != b) throw new IllegalStateException(s"There are unequal distances: $a, $b")
+      a
+    })
+    writer.write(s"$id\t$chr\t$pos\t$featNames\t$geneNames\t$distance\n")
   }
 
   reader.close()

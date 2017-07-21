@@ -1,5 +1,5 @@
 val nm = "sgxtools"
-val ver = "1.0.2"
+val ver = "1.0.3"
 
 
 // Basic info
@@ -15,7 +15,7 @@ mainClass in (Compile,run) := Some("commandline.CommandLineEngine")
 mainClass in assembly := Some("commandline.CommandLineEngine")
 
 // Dependencies
-unmanagedJars in Compile += file("lib/sgxlib-1.0.2.jar")
+unmanagedJars in Compile += file("lib/sgxlib-1.0.3.jar")
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 libraryDependencies += "org.rogach" %% "scallop" % "2.1.0"
 
