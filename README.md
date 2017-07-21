@@ -75,11 +75,11 @@ Explanation:
 
 ### NearestFeature
 
-`NearestFeature` identifies the nearest feature(s) in a GTF2.2 file to each of a list of genomic positions.
+`NearestFeature` identifies the nearest feature(s) and gene(s) in a GTF2.2 file to each of a list of genomic positions. GTF2.2 format is strictly enforced.
 
-The distance between a genomic position and a feature is defined as zero if the position overlaps the span of the feature (including introns), or the positive distance to the closest position in the feature otherwise. If multiple features lie at the same distance, all features tied for the minimum distance are reported.
+The distance between a genomic position and a feature is defined as zero if the position overlaps the span of the feature (including introns), or the positive distance to the closest position in the feature otherwise. If multiple features lie at the same distance, all features tied for the minimum distance are reported. Gene IDs corresponding to the nearest features are also reported.
 
-The program writes a table with one line per position, reporting the list of nearest features to each position as well as their distances from the position.
+The program writes a table with one line per position, reporting the lists of nearest features and genes to each position as well as their common distance from the position.
 
 To run:
 ```
