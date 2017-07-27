@@ -99,6 +99,29 @@ Explanation:
 - Position file: file of genomic positions. Each line has format: \<id> \<chr> \<pos>
 - Output table: file to write output to
 
+### NearbyFeatures
 
+`NearbyFeatures` identifies the feature(s) and gene(s) in a GTF2.2 file within a specified distance of each of a list of genomic positions. GTF2.2 format is strictly enforced.
 
+The program writes a table with one line per position, reporting the lists of features and genes within the specified distance of each position, their distances from the position, and the direction of the position relative to the features and genes. There is also a column of output listing coordinates of exons that overlap the position. Distance is defined as in `NearestFeature` above.
+
+To run:
+```
+java -jar sgxtools-[version].jar NearbyFeatures --help
+```
+
+Options:
+```
+  -d, --dist  <arg>       Distance to go out from position
+  -g, --gtf  <arg>        GTF2.2 file
+  -o, --out  <arg>        Output table
+  -p, --pos-list  <arg>   Position file (line format: <id> <chr> <pos>
+      --help              Show help message
+```
+
+Explanation:
+- GTF2.2 file: file of features in [GTF2.2](http://mblab.wustl.edu/GTF22.html) format.
+- Position file: file of genomic positions. Each line has format: \<id> \<chr> \<pos>
+- Distance: distance to look in either direction from each position
+- Output table: file to write output to
 
