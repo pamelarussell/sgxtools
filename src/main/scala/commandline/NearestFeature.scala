@@ -3,7 +3,7 @@ package commandline
 import java.io._
 
 import collection.GTF22FeatureSet
-import feature.{Block, GenericFeature, Transcript, Unstranded, Feature}
+import feature.{Block, GenericFeature, Transcript, Unstranded}
 
 /**
   * [[NearestFeature]] program parameters

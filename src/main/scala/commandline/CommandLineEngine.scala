@@ -42,9 +42,19 @@ object CommandLineEngine extends App {
       val out: ScallopOption[String] = opt[String](required = true, descr = "Output table")
     }
 
+    val nearbyFeatures = new Subcommand(NearbyFeatures.toolName) {
+      descr(NearbyFeatures.descr)
+      val posList: ScallopOption[String] = opt[String](required = true,
+        descr = "Position file (line format: <id> <chr> <pos>")
+      val gtf: ScallopOption[String] = opt[String](required = true, descr = "GTF2.2 file")
+      val dist: ScallopOption[Int] = opt[Int](required = true, descr = "Distance to go out from position")
+      val out: ScallopOption[String] = opt[String](required = true, descr = "Output table")
+    }
+
     // Add the subcommands to the configuration
     addSubcommand(featureCounts)
     addSubcommand(nearestFeature)
+    addSubcommand(nearbyFeatures)
 
     // Text for help menu
     version(s"\n${BuildInfo.name} ${BuildInfo.version}\n")
@@ -84,6 +94,17 @@ object CommandLineEngine extends App {
         val out = new File(conf.nearestFeature.out
           .getOrElse(throw new IllegalArgumentException("Invalid option")))
         NearestFeature(posList, gtf, out)
+
+      case Some(conf.nearbyFeatures) =>
+        val posList = new File(conf.nearbyFeatures.posList
+          .getOrElse(throw new IllegalArgumentException("Invalid option")))
+        val gtf = new File(conf.nearbyFeatures.gtf
+          .getOrElse(throw new IllegalArgumentException("Invalid option")))
+        val dist = conf.nearbyFeatures.dist
+          .getOrElse(throw new IllegalArgumentException("Invalid option"))
+        val out = new File(conf.nearbyFeatures.out
+          .getOrElse(throw new IllegalArgumentException("Invalid option")))
+        NearbyFeatures(posList, gtf, dist, out)
 
       case _ =>
         conf.printHelp()
