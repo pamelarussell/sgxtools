@@ -16,23 +16,21 @@ object NearbyFeatures extends CommandLineProgram {
   // String representation of relative direction of position with respect to a feature
   private def relDir(pos: Int, feat: Feature): String = {
     val start = feat.getStart
-    val end = feat.getEnd
     val strand = feat.getOrientation
-    strand match {
+    val posFeat = new GenericFeature(Block(feat.getChr, pos, pos+1, Unstranded), None)
+    if(posFeat.overlaps(feat)) "in_exon"
+    else if(posFeat.overlapsSpan(feat)) "in_intron"
+    else strand match {
       case Plus =>
         if(pos < start) "upstream"
-        else if(pos >= end) "downstream"
-        else "in_span"
+        else "downstream"
       case Minus =>
         if(pos < start) "downstream"
-        else if(pos >= end) "upstream"
-        else "in_span"
+        else "upstream"
       case Unstranded =>
-        if(pos >= start && pos < end) "in_span"
-        else "unstranded"
+        "unstranded"
     }
   }
-
 }
 
 /** Finds nearby features to a list of positions in a GTF2.2 file and writes the results to a table.
@@ -53,7 +51,7 @@ final case class NearbyFeatures(posList: File, gtf22: File, dist: Int, output: F
   val reader = new BufferedReader(new FileReader(posList))
   val writer = new FileWriter(output)
   writer.write("id\tchr\tpos\tnearby_features\tnearby_genes\toverlapping_blocks\tdistance_to_features\t" +
-    "distance_to_genes\tposition_direction_wrt_features\tposition_direction_wrt_genes\n")
+    "distance_to_genes\tposition_wrt_features\tposition_wrt_genes\n")
 
   while(reader.ready()) {
     val line = reader.readLine()
@@ -62,12 +60,13 @@ final case class NearbyFeatures(posList: File, gtf22: File, dist: Int, output: F
     val id = tokens(0)
     val chr = tokens(1).replaceAll("^chr", "")
     val pos = tokens(2).toInt
-    val nearby = features.overlappers(chr, Math.max(0, pos-dist), pos + dist + 1, Unstranded).toList
+    val nearby = features.overlappersSpan(chr, Math.max(0, pos-dist), pos + dist + 1, Unstranded).toList
 
     val overlappingBlks = nearby.
       flatMap(_.getBlocks).
       filter(_.overlaps(Block(chr, pos, pos+1, Unstranded))).
-      map(_.toString())
+      map(_.toString()).
+      distinct
     val overlappingBlkStr = if(overlappingBlks.isEmpty) "NA" else overlappingBlks.mkString(",")
 
     val featNameDistDirGene: List[(Feature, String, Int, String, Option[String])] = nearby.map(feat => (
@@ -90,12 +89,10 @@ final case class NearbyFeatures(posList: File, gtf22: File, dist: Int, output: F
       mapValues(x => (x.minBy(y => y._3)._3,
         x.map(y => y._4).distinct match {
           case List(y) => y
-          case List("in_span", _) => "in_span"
-          case List(_, "in_span") => "in_span"
+          case list if list.contains("in_exon") => "in_exon"
+          case list if list.contains("in_intron") => "in_intron"
           case _ => "various"
         }
-//        if(x.forall(_._4 == x.head._4)) x.head._4
-//        else "various"
       ))
 
     val geneNames = if(geneNameDistDir.isEmpty) "NA" else geneNameDistDir.keys.mkString(",")
