@@ -7,7 +7,7 @@ sgxtools provides command line genomics applications using [sgxlib](https://gith
 
 ## Requirements
 
-- Java 8
+- Java 8 or higher
 
 ## Download
 
@@ -75,11 +75,11 @@ Explanation:
 
 ### NearestFeature
 
-`NearestFeature` identifies the nearest feature(s) and gene(s) in a GTF2.2 file to each of a list of genomic positions. GTF2.2 format is strictly enforced.
+`NearestFeature` identifies the nearest feature(s) and gene(s) in a GTF2.2 file to each of a list of genomic intervals. GTF2.2 format is strictly enforced.
 
-The distance between a genomic position and a feature is defined as zero if the position overlaps the span of the feature (including introns), or the positive distance to the closest position in the feature otherwise. If multiple features lie at the same distance, all features tied for the minimum distance are reported. Gene IDs corresponding to the nearest features are also reported.
+The distance between a genomic interval and a feature is defined as zero if the interval overlaps the span of the feature (including introns), or the positive distance to the closest position in the feature otherwise. If multiple features lie at the same distance, all features tied for the minimum distance are reported. Gene IDs corresponding to the nearest features are also reported.
 
-The program writes a table with one line per position, reporting the lists of nearest features and genes to each position as well as their common distance from the position.
+The program writes a table with one line per position, reporting the lists of nearest features and genes to each position as well as their common distance from the interval.
 
 To run:
 ```
@@ -90,13 +90,13 @@ Options:
 ```
   -g, --gtf  <arg>        GTF2.2 file
   -o, --out  <arg>        Output table
-  -p, --pos-list  <arg>   Position file (line format: <id> <chr> <pos>
+  -p, --interval-list  <arg>   Interval file (line format: <id> <chr> <start_inclusive> <end_exclusive>)
       --help              Show help message
 ```
 
 Explanation:
 - GTF2.2 file: file of features in [GTF2.2](http://mblab.wustl.edu/GTF22.html) format.
-- Position file: file of genomic positions. Each line has format: \<id> \<chr> \<pos>
+- Interval file: file of genomic intervals. Each line has format: \<id> \<chr> \<start_inclusive> \<end_exclusive>
 - Output table: file to write output to
 
 ### NearbyFeatures
