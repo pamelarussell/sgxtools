@@ -36,8 +36,8 @@ object CommandLineEngine extends App {
 
     val nearestFeature = new Subcommand(NearestFeature.toolName) {
       descr(NearestFeature.descr)
-      val posList: ScallopOption[String] = opt[String](required = true,
-        descr = "Position file (line format: <id> <chr> <pos>")
+      val intervalList: ScallopOption[String] = opt[String](required = true,
+        descr = "Interval file (line format: <id> <chr> <start_inclusive> <end_exclusive>)")
       val gtf: ScallopOption[String] = opt[String](required = true, descr = "GTF2.2 file")
       val out: ScallopOption[String] = opt[String](required = true, descr = "Output table")
     }
@@ -87,13 +87,13 @@ object CommandLineEngine extends App {
         FeatureCounts(bam, gtf, fpstrand, out)
 
       case Some(conf.nearestFeature) =>
-        val posList = new File(conf.nearestFeature.posList
+        val intervalList = new File(conf.nearestFeature.intervalList
           .getOrElse(throw new IllegalArgumentException("Invalid option")))
         val gtf = new File(conf.nearestFeature.gtf
           .getOrElse(throw new IllegalArgumentException("Invalid option")))
         val out = new File(conf.nearestFeature.out
           .getOrElse(throw new IllegalArgumentException("Invalid option")))
-        NearestFeature(posList, gtf, out)
+        NearestFeature(intervalList, gtf, out)
 
       case Some(conf.nearbyFeatures) =>
         val posList = new File(conf.nearbyFeatures.posList
