@@ -54,7 +54,7 @@ object CommandLineEngine extends App {
     val bamMergeBlockOverlappers = new Subcommand(BamMergeBlockOverlappers.toolName) {
       descr(BamMergeBlockOverlappers.descr)
       val bam: ScallopOption[String] = opt[String](required = true, descr = "Bam file")
-      val intervals: ScallopOption[String] = opt[String](required = true, descr = s"Intervals e.g. separated by '${BamMergeBlockOverlappers.blkSep}'")
+      val intervals: ScallopOption[String] = opt[String](required = true, descr = s"Intervals e.g. chr5:1000-2000:+ separated by '${BamMergeBlockOverlappers.blkSep}'")
       val fpstrand: ScallopOption[String] = opt[String](required = true, descr = s"First of pair orientation " +
         s"with respect to transcript (${Orientation.commaSepList})")
       val out: ScallopOption[String] = opt[String](required = true, descr = "Output BED file")
