@@ -24,10 +24,10 @@ object BamMergeBlockOverlappers extends CommandLineProgram {
 }
 
 /**
-  * Generates a single merged feature from the union of all records in a bam file that overlap all of a given
+  * Generates merged blocks from the union of all records in a bam file that overlap all of a given
   * list of intervals. In other words, iterates through the bam file and keeps each record such that the record
-  * simultaneously overlaps all the given intervals. Then takes the union of all kept records. Writes the single
-  * merged record to a BED file.
+  * simultaneously overlaps all the given intervals. Then takes the union of all kept records. Writes the blocks
+  * of the union to a BED file.
   *
   * @param bam Bam file
   * @param intervals List of intervals e.g. chr6:1000-2000:+ or chr5:100-300:unstranded, separated by [[BamMergeBlockOverlappers.blkSep]]
@@ -56,7 +56,12 @@ final case class BamMergeBlockOverlappers(bam: File, intervals: Iterable[Block],
 
   println(s"Writing output to ${output.getAbsolutePath}")
   val bw = new BufferedWriter(new FileWriter(output))
-  bw.write(new GenericFeature(mergedOverlappers, Some(s"Merge_${nOverlap}_overlappers")).toBED() + "\n")
+  var blockNum = 0
+  for(block <- mergedOverlappers.blocks) {
+    bw.write(new GenericFeature(block, Some(s"merge_${nOverlap}_overlappers_block_$blockNum")).toBED() + "\n")
+    blockNum = blockNum + 1
+  }
+
   bw.close()
 
   println("\nAll done.\n")

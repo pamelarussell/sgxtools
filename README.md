@@ -127,7 +127,7 @@ Explanation:
 
 ### BamMergeBlockOverlappers
 
-`BamMergeBlockOverlappers` generates a single merged feature from the union of all records in a bam file that overlap all of a given list of intervals. In other words, it iterates through the bam file and keeps each record such that the record simultaneously overlaps all the given intervals. Then it takes the union of all kept records and writes the single merged record to a BED file.
+`BamMergeBlockOverlappers` generates merged blocks from the union of all records in a bam file that overlap all of a given list of intervals. In other words, it iterates through the bam file and keeps each record such that the record simultaneously overlaps all the given intervals. Then it takes the union of all kept records and writes the blocks of the union to a BED file.
 
 To run:
 ```
@@ -148,4 +148,4 @@ Explanation:
 - Bam file: Bam file
 - First of pair orientation with respect to transcript: if strand specific, if first of pair always maps to transcript strand, this is '+'. If first of pair always maps to opposite of transcript strand, this is '-'. If not strand specific, 'unstranded'.
 - Intervals: Comma-separated list of intervals, e.g. "chr5:1000-2000:+,chr5:2100-2200:+"
-- Output BED file: BED file to write the single merged record to
+- Output BED file: BED file to write the merged blocks to
