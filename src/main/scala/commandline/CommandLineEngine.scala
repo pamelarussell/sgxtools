@@ -51,10 +51,20 @@ object CommandLineEngine extends App {
       val out: ScallopOption[String] = opt[String](required = true, descr = "Output table")
     }
 
+    val bamMergeBlockOverlappers = new Subcommand(BamMergeBlockOverlappers.toolName) {
+      descr(BamMergeBlockOverlappers.descr)
+      val bam: ScallopOption[String] = opt[String](required = true, descr = "Bam file")
+      val intervals: ScallopOption[String] = opt[String](required = true, descr = s"Intervals e.g. separated by '${BamMergeBlockOverlappers.blkSep}'")
+      val fpstrand: ScallopOption[String] = opt[String](required = true, descr = s"First of pair orientation " +
+        s"with respect to transcript (${Orientation.commaSepList})")
+      val out: ScallopOption[String] = opt[String](required = true, descr = "Output BED file")
+    }
+
     // Add the subcommands to the configuration
     addSubcommand(featureCounts)
     addSubcommand(nearestFeature)
     addSubcommand(nearbyFeatures)
+    addSubcommand(bamMergeBlockOverlappers)
 
     // Text for help menu
     version(s"\n${BuildInfo.name} ${BuildInfo.version}\n")
@@ -105,6 +115,13 @@ object CommandLineEngine extends App {
         val out = new File(conf.nearbyFeatures.out
           .getOrElse(throw new IllegalArgumentException("Invalid option")))
         NearbyFeatures(posList, gtf, dist, out)
+
+      case Some(conf.bamMergeBlockOverlappers) =>
+        val bam = new File(conf.bamMergeBlockOverlappers.bam.getOrElse(throw new IllegalArgumentException("Invalid option")))
+        val intervals = BamMergeBlockOverlappers.blocksFromString(conf.bamMergeBlockOverlappers.intervals.getOrElse(throw new IllegalArgumentException("Invalid option")))
+        val fpStrand = Orientation.fromString(conf.bamMergeBlockOverlappers.fpstrand.getOrElse(throw new IllegalArgumentException("Invalid option")))
+        val output = new File(conf.bamMergeBlockOverlappers.out.getOrElse(throw new IllegalArgumentException("Invalid option")))
+        BamMergeBlockOverlappers(bam, intervals, fpStrand, output)
 
       case _ =>
         conf.printHelp()
