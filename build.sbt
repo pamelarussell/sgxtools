@@ -1,5 +1,5 @@
 val nm = "sgxtools"
-val ver = "1.0.7"
+val ver = "1.0.8"
 
 
 // Basic info

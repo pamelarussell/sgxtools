@@ -60,11 +60,20 @@ object CommandLineEngine extends App {
       val out: ScallopOption[String] = opt[String](required = true, descr = "Output BED file")
     }
 
+    val vcfRemoveAlleles = new Subcommand(VcfRemoveAlleles.toolName) {
+      descr(VcfRemoveAlleles.descr)
+      val vcf: ScallopOption[String] = opt[String](required = true, descr = "Input VCF file")
+      val alleles: ScallopOption[String] = opt[String](required = true, descr = "File of alleles to remove, one line per allele, " +
+        "format = variant_id  allele (can have multiple lines per variant)")
+      val output: ScallopOption[String] = opt[String](required = true, descr = "Output VCF file")
+    }
+
     // Add the subcommands to the configuration
     addSubcommand(featureCounts)
     addSubcommand(nearestFeature)
     addSubcommand(nearbyFeatures)
     addSubcommand(bamMergeBlockOverlappers)
+    addSubcommand(vcfRemoveAlleles)
 
     // Text for help menu
     version(s"\n${BuildInfo.name} ${BuildInfo.version}\n")
@@ -122,6 +131,13 @@ object CommandLineEngine extends App {
         val fpStrand = Orientation.fromString(conf.bamMergeBlockOverlappers.fpstrand.getOrElse(throw new IllegalArgumentException("Invalid option")))
         val output = new File(conf.bamMergeBlockOverlappers.out.getOrElse(throw new IllegalArgumentException("Invalid option")))
         BamMergeBlockOverlappers(bam, intervals, fpStrand, output)
+
+      case Some(conf.vcfRemoveAlleles) =>
+        val vcf = new File(conf.vcfRemoveAlleles.vcf.getOrElse(throw new IllegalArgumentException("Invalid option")))
+        val alleleFile = new File(conf.vcfRemoveAlleles.alleles.getOrElse(throw new IllegalArgumentException("Invalid option")))
+        val alleles = VcfRemoveAlleles.readAlleles(alleleFile)
+        val output = new File(conf.vcfRemoveAlleles.output.getOrElse(throw new IllegalArgumentException("Invalid option")))
+        VcfRemoveAlleles(vcf, alleles, output)
 
       case _ =>
         conf.printHelp()

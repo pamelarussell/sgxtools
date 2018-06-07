@@ -149,3 +149,29 @@ Explanation:
 - First of pair orientation with respect to transcript: if strand specific, if first of pair always maps to transcript strand, this is '+'. If first of pair always maps to opposite of transcript strand, this is '-'. If not strand specific, 'unstranded'.
 - Intervals: Comma-separated list of intervals, e.g. "chr5:1000-2000:+,chr5:2100-2200:+"
 - Output BED file: BED file to write the merged blocks to
+
+### VcfRemoveAlleles
+
+`VcfRemoveAlleles` modifies a VCF file, setting individual genotypes to missing for specified variants and alleles. Input is a list of chromosome, position, variant ID, and allele to delete. If an individual has at least one copy of the allele for the variant, their whole genotype will be set to missing. The program will crash if a variant in the VCF file cannot be uniquely determined from the combination of chromosome, position, and ID.
+
+To run:
+```
+java -jar sgxtools-[version].jar VcfRemoveAlleles --help
+```
+
+Options:
+```
+  -a, --alleles  <arg>   File of alleles to remove, one line per allele, format
+                         = variant_id  allele (can have multiple lines per
+                         variant)
+  -o, --output  <arg>    Output VCF file
+  -v, --vcf  <arg>       Input VCF file
+      --help             Show help message
+```
+
+Explanation:
+- File of alleles to remove: Line format: chr pos id allele. Include multiple lines per variant to remove more than one different allele for a single variant.
+- Output: VCF file to write
+- Input VCF file: VCF file to modify
+
+
