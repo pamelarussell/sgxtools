@@ -41,24 +41,25 @@ final case class BamMergeBlockOverlappers(bam: File, intervals: Iterable[Block],
   println("\nBamMergeBlockOverlappers...\n")
 
   println(s"Reading alignments from ${bam.getAbsolutePath}")
-  val sr = new SamReader(bam)
-  val it: Iterator[SAMRecord] = sr.iterator
-  var nOverlap = 0
-  val mergedOverlappers: Region = it.foldLeft[Region](Empty)((region, rec) => {
+  val sr = new SamReader(bam, fpStrand)
+  // Merge iterators over overlappers of any of the blocks
+  val mergedIter: Iterator[SAMRecord] =
+    intervals.foldLeft[Iterator[SAMRecord]](Iterator.empty)(
+      (iter, interval) => iter ++ sr.overlappers(new GenericFeature(interval, None)))
+  // Merge sam records that overlap all the blocks
+  val mergedOverlappers: Region = mergedIter.foldLeft[Region](Empty)((region, rec) => {
     val feat2: SamMapping = SamMapping(rec, fpStrand)
     if(intervals.forall(in => feat2.blocks.overlaps(in))) {
-      nOverlap = nOverlap + 1
       feat2.blocks.union(region)
     }
     else region
   })
-  println(s"There were $nOverlap records overlapping intervals ${intervals.mkString(";")}")
 
   println(s"Writing output to ${output.getAbsolutePath}")
   val bw = new BufferedWriter(new FileWriter(output))
   var blockNum = 0
   for(block <- mergedOverlappers.blocks) {
-    bw.write(new GenericFeature(block, Some(s"merge_${nOverlap}_overlappers_block_$blockNum")).toBED() + "\n")
+    bw.write(new GenericFeature(block, Some(s"block_$blockNum")).toBED() + "\n")
     blockNum = blockNum + 1
   }
 
