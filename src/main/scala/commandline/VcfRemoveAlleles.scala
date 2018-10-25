@@ -83,8 +83,7 @@ object VcfRemoveAlleles extends CommandLineProgram {
   * of chromosome, position, and ID.
   *
   * @param vcf VCF file
-  * @param toRemove File of alleles to remove. Line format: chr pos id allele. Include multiple lines
-  *                 per variant to remove more than one different allele for a single variant.
+  * @param toRemove Map of (chr, pos, id) -> alleles to remove
   * @param output VCF file to write
   */
 final case class VcfRemoveAlleles(vcf: File, toRemove: Map[(String, Int, String), Set[Allele]], output: File) {
